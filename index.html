@@ -1,1638 +1,449 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ilarika - Premium Fashion Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <style>
-        /* ── Google Fonts already loaded via <link> above ── */
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
-
-        /* ── DESIGN TOKENS ── */
-        :root {
-            --cream:       #F5F0E8;
-            --cream-dark:  #EDE7D8;
-            --cream-mid:   #FAF7F2;
-            --ink:         #1C1916;
-            --ink-soft:    #4A4540;
-            --ink-light:   #9A948C;
-            --accent:      #C9A96E;
-            --accent-deep: #A07840;
-            --white:       #FFFFFF;
-            --border:      #E8E0D0;
-            --success:     #2E7D52;
-            --danger:      #C0392B;
-            --card-bg:     #FDFAF5;
-            --radius:      18px;
-            --radius-sm:   10px;
-            --shadow:      0 4px 24px rgba(28,25,22,0.07);
-            --shadow-lg:   0 12px 40px rgba(28,25,22,0.13);
-            --font-display:'Playfair Display', Georgia, serif;
-            --font-body:   'DM Sans', 'Poppins', sans-serif;
-            --transition:  0.28s cubic-bezier(0.4,0,0.2,1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: var(--font-body);
-            background: var(--cream);
-            color: var(--ink);
-            line-height: 1.65;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* ===== HEADER ===== */
-        header {
-            background: var(--cream-mid);
-            padding: 0 2.5rem;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 16px rgba(28,25,22,0.06);
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 2rem;
-            height: 70px;
-        }
-
-        .logo {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--ink);
-            text-decoration: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            letter-spacing: 0.04em;
-            transition: opacity var(--transition);
-        }
-
-        .logo:hover { opacity: 0.75; transform: none; }
-
-        .logo-image {
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: var(--cream-dark);
-            border: 1px solid var(--border);
-            overflow: hidden;
-        }
-
-        .logo-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.1;
-        }
-
-        .logo-brand {
-            font-size: 0.65rem;
-            font-weight: 500;
-            color: var(--accent-deep);
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            font-family: var(--font-body);
-        }
-
-        .logo-name {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--ink);
-            font-family: var(--font-display);
-        }
-
-        .search-bar {
-            flex: 1;
-            max-width: 380px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 0.7rem 1.2rem;
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            background: var(--cream-dark);
-            color: var(--ink);
-            font-size: 0.88rem;
-            font-family: var(--font-body);
-            transition: all var(--transition);
-        }
-
-        .search-bar input::placeholder { color: var(--ink-light); }
-
-        .search-bar input:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: var(--white);
-            box-shadow: 0 0 0 3px rgba(201,169,110,0.12);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
-            border-radius: 50px;
-            padding: 0.6rem 1.4rem;
-            font-weight: 500;
-            font-size: 0.82rem;
-            letter-spacing: 0.06em;
-            transition: all var(--transition);
-            font-family: var(--font-body);
-        }
-
-        .btn-primary {
-            background: var(--ink);
-            color: var(--cream);
-        }
-
-        .btn-primary:hover {
-            background: var(--ink-soft);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: var(--cream-dark);
-            color: var(--ink);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: var(--white);
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: var(--white);
-            border-radius: var(--radius-sm);
-        }
-
-        /* ===== MAIN PAGE ===== */
-        .page { display: none; }
-        .page.active { display: block; }
-
-        /* ===== HERO SECTION ===== */
-        .hero {
-            background: var(--cream-mid);
-            padding: 4rem 2.5rem;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Soft decorative circle behind hero text */
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 500px; height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%);
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-
-        .hero-content {
-            max-width: 680px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        /* eyebrow line above h1 */
-        .hero-content::before {
-            content: '— May Edit —';
-            display: block;
-            font-size: 0.7rem;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: var(--accent-deep);
-            margin-bottom: 1rem;
-            font-family: var(--font-body);
-        }
-
-        .hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 700;
-            margin-bottom: 0.6rem;
-            color: var(--ink);
-            line-height: 1.2;
-        }
-
-        .hero h1 em {
-            font-style: italic;
-            color: var(--accent-deep);
-            font-weight: 400;
-        }
-
-        .hero p {
-            font-size: 1rem;
-            color: var(--ink-light);
-            margin-bottom: 0;
-            font-weight: 300;
-            letter-spacing: 0.04em;
-        }
-
-        /* ===== PRODUCT CATEGORIES ===== */
-        .categories-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 3.5rem 2.5rem;
-        }
-
-        .category-section {
-            margin-bottom: 4.5rem;
-            animation: fadeUp 0.5s ease both;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .category-header {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            margin-bottom: 1.8rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .category-title {
-            font-family: var(--font-display);
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: var(--ink);
-        }
-
-        /* category index number */
-        .category-title::before {
-            content: attr(data-index);
-            display: inline-block;
-            font-family: var(--font-body);
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin-right: 0.8rem;
-            vertical-align: middle;
-            font-weight: 500;
-        }
-
-        .category-subtitle {
-            font-size: 0.82rem;
-            color: var(--ink-light);
-            font-weight: 300;
-        }
-
-        /* ===== PRODUCTS GRID ===== */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1.4rem;
-            margin-bottom: 0;
-        }
-
-        .product-card {
-            position: relative;
-            cursor: pointer;
-            overflow: hidden;
-            border-radius: var(--radius);
-            background: var(--card-bg);
-            transition: transform var(--transition), box-shadow var(--transition);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-        }
-
-        .product-card:hover {
-            transform: translateY(-7px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .product-image-wrapper {
-            width: 100%;
-            height: 240px;
-            background: var(--cream-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.5rem;
-            overflow: hidden;
-            position: relative;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.45s ease;
-        }
-
-        .product-card:hover .product-image { transform: scale(1.04); }
-
-        .product-discount-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--accent);
-            color: var(--white);
-            padding: 0.28rem 0.65rem;
-            border-radius: 50px;
-            font-size: 0.68rem;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            z-index: 10;
-        }
-
-        .product-info {
-            padding: 1rem 1.1rem 1.1rem;
-        }
-
-        .product-category {
-            font-size: 0.62rem;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: var(--accent-deep);
-            font-weight: 500;
-            margin-bottom: 0.3rem;
-        }
-
-        .product-name {
-            font-size: 0.88rem;
-            font-weight: 500;
-            color: var(--ink);
-            margin-bottom: 0.45rem;
-            line-height: 1.35;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .product-price-section {
-            display: flex;
-            gap: 0.8rem;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .product-price {
-            font-family: var(--font-display);
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--accent-deep);
-        }
-
-        .product-original-price {
-            font-size: 0.8rem;
-            color: var(--ink-light);
-            text-decoration: line-through;
-        }
-
-        .product-stock {
-            font-size: 0.72rem;
-            color: var(--ink-light);
-            margin-bottom: 0;
-            letter-spacing: 0.04em;
-        }
-
-        .product-stock.in-stock  { color: var(--success); }
-        .product-stock.out-of-stock { color: var(--danger); }
-
-        /* ===== HOVER POPUP ===== */
-        .hover-popup {
-            position: fixed;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1rem;
-            z-index: 500;
-            display: none;
-            box-shadow: var(--shadow-lg);
-            pointer-events: none;
-            min-width: 170px;
-        }
-
-        .hover-popup.show {
-            display: block;
-            animation: popupSlideIn 0.18s ease;
-        }
-
-        @keyframes popupSlideIn {
-            from { opacity: 0; transform: scale(0.92); }
-            to   { opacity: 1; transform: scale(1); }
-        }
-
-        .hover-popup-image {
-            width: 130px;
-            height: 130px;
-            border-radius: var(--radius-sm);
-            object-fit: cover;
-            margin-bottom: 0.7rem;
-            background: var(--cream-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-        }
-
-        .hover-popup-name {
-            font-weight: 500;
-            font-size: 0.82rem;
-            margin-bottom: 0.35rem;
-            color: var(--ink);
-            font-family: var(--font-body);
-        }
-
-        .hover-popup-price {
-            font-family: var(--font-display);
-            color: var(--accent-deep);
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        /* ===== MODAL (Product Details) ===== */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(28,25,22,0.6);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            overflow-y: auto;
-        }
-
-        .modal.active { display: flex; }
-
-        .modal-content {
-            background: var(--cream-mid);
-            border-radius: 24px;
-            padding: 2.2rem;
-            max-width: 900px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-            position: relative;
-            border: 1px solid var(--border);
-            box-shadow: 0 24px 60px rgba(28,25,22,0.2);
-        }
-
-        .modal-images {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .modal-main-image {
-            width: 100%;
-            height: 340px;
-            border-radius: var(--radius);
-            background: var(--cream-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            border: 1px solid #f0f0f0;
-        }
-
-        .modal-thumbnails {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.8rem;
-        }
-
-        .modal-thumb {
-            width: 100%;
-            height: 74px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: border-color var(--transition);
-            background: var(--cream-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-        }
-
-        .modal-thumb:hover,
-        .modal-thumb.active { border-color: var(--accent); }
-
-        .modal-details h2 {
-            font-family: var(--font-display);
-            font-size: 1.7rem;
-            margin-bottom: 0.5rem;
-            color: var(--ink);
-            font-weight: 700;
-        }
-
-        .modal-category {
-            color: var(--accent-deep);
-            font-weight: 500;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-            letter-spacing: 0.16em;
-        }
-
-        .modal-price {
-            font-family: var(--font-display);
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--accent-deep);
-            margin-bottom: 1rem;
-        }
-
-        .modal-rating {
-            color: var(--accent);
-            font-weight: 500;
-            margin-bottom: 1rem;
-            font-size: 0.88rem;
-        }
-
-        .modal-stock {
-            margin-bottom: 1.4rem;
-            padding: 0.75rem 1rem;
-            background: rgba(46,125,82,0.08);
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--success);
-            border-left: 3px solid var(--success);
-        }
-
-        .modal-description {
-            color: var(--ink-soft);
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        .modal-quantity {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-quantity label {
-            font-size: 0.82rem;
-            font-weight: 500;
-            color: var(--ink-soft);
-        }
-
-        .modal-quantity button {
-            padding: 0.5rem 0.9rem;
-            background: var(--cream-dark);
-            color: var(--ink);
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            font-size: 1rem;
-        }
-
-        .modal-quantity button:hover { background: var(--border); }
-
-        .modal-quantity input {
-            width: 56px;
-            padding: 0.5rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            text-align: center;
-            font-weight: 600;
-            background: var(--white);
-            color: var(--ink);
-            font-family: var(--font-body);
-        }
-
-        .modal-video {
-            margin-bottom: 1.5rem;
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-            display: none;
-        }
-
-        .modal-video.show { display: block; }
-
-        .modal-video iframe {
-            width: 100%;
-            height: 240px;
-            border: none;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 0.8rem;
-        }
-
-        .modal-actions button {
-            flex: 1;
-            padding: 0.9rem;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1.2rem;
-            right: 1.2rem;
-            background: var(--cream-dark);
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            color: var(--ink);
-            transition: background var(--transition);
-        }
-
-        .modal-close:hover { background: var(--border); }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1200px) {
-            .products-grid { grid-template-columns: repeat(4, 1fr); }
-        }
-
-        @media (max-width: 768px) {
-            .modal-content {
-                grid-template-columns: 1fr;
-                padding: 1.5rem;
-            }
-            .products-grid { grid-template-columns: repeat(3, 1fr); }
-            .hero h1 { font-size: 1.9rem; }
-            .header-content { flex-wrap: wrap; gap: 1rem; height: auto; padding: 0.8rem 0; }
-            .search-bar { order: 3; width: 100%; max-width: none; }
-
-        }
-
-        @media (max-width: 480px) {
-            .products-grid { grid-template-columns: repeat(2, 1fr); }
-            .modal-content { max-width: 95%; padding: 1rem; }
-            .hero h1 { font-size: 1.5rem; }
-        }
-
-        .hidden { display: none !important; }
-
-        .alert {
-            padding: 0.9rem 1.2rem;
-            border-radius: var(--radius-sm);
-            margin-bottom: 0.5rem;
-            animation: slideDown 0.3s ease;
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
-            font-size: 0.88rem;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-16px); opacity: 0; }
-            to   { transform: translateY(0); opacity: 1; }
-        }
-
-        .alert.success {
-            background: rgba(46,125,82,0.1);
-            color: var(--success);
-            border-left: 3px solid var(--success);
-        }
-
-        .alert.error {
-            background: rgba(192,57,43,0.1);
-            color: var(--danger);
-            border-left: 3px solid var(--danger);
-        }
-
-        /* ===== CART SIDEBAR ===== */
-        .cart-sidebar {
-            position: fixed;
-            right: -360px;
-            top: 0;
-            width: 360px;
-            height: 100vh;
-            background: var(--cream-mid);
-            border-left: 1px solid var(--border);
-            z-index: 200;
-            display: flex;
-            flex-direction: column;
-            transition: right 0.32s cubic-bezier(0.4,0,0.2,1);
-            box-shadow: -8px 0 32px rgba(28,25,22,0.1);
-            overflow-y: auto;
-        }
-
-        .cart-sidebar.active { right: 0; }
-
-        .cart-header {
-            background: var(--ink);
-            color: var(--cream);
-            padding: 1.4rem 1.5rem;
-            font-family: var(--font-display);
-            font-weight: 600;
-            font-size: 1.1rem;
-            letter-spacing: 0.04em;
-        }
-
-        .cart-items {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-        }
-
-        .cart-item {
-            padding: 0.9rem 0.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.88rem;
-            color: var(--ink-soft);
-        }
-
-        .cart-item strong { color: var(--ink); }
-
-        .cart-footer {
-            padding: 1.4rem 1.5rem;
-            border-top: 1px solid var(--border);
-            background: var(--cream-dark);
-        }
-
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 1.15rem;
-            color: var(--ink);
-        }
-
-        /* ===== AUTH MODAL ===== */
-        .auth-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(28,25,22,0.55);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .auth-modal.active { display: flex; }
-
-        .auth-form {
-            background: var(--cream-mid);
-            border-radius: 24px;
-            padding: 2.5rem;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(28,25,22,0.22);
-            border: 1px solid var(--border);
-        }
-
-        .auth-form h2 {
-            margin-bottom: 1.5rem;
-            color: var(--ink);
-            text-align: center;
-            font-family: var(--font-display);
-            font-size: 1.45rem;
-            font-weight: 700;
-        }
-
-        .form-group { margin-bottom: 1.3rem; }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            font-size: 0.82rem;
-            color: var(--ink-soft);
-            letter-spacing: 0.04em;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: var(--cream-dark);
-            color: var(--ink);
-            font-family: var(--font-body);
-            font-size: 0.9rem;
-            transition: all var(--transition);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: var(--white);
-            box-shadow: 0 0 0 3px rgba(201,169,110,0.12);
-        }
-
-        .auth-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            margin-top: 1.5rem;
-        }
-
-        .auth-buttons button { width: 100%; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curated Picks — Your Wardrobe This Month</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Google Fonts: Playfair Display + DM Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
-    <header>
-        <div class="header-content">
-            <a class="logo" onclick="goToPage('home'); return false;" href="#home">
-                <div class="logo-image">
-                    <img src="ilarika-logo.png" alt="Ilarika Logo">
-                </div>
-                <div class="logo-text">
-                    <span class="logo-brand">ILARIKA</span>
-                    <span class="logo-name">Premium Fashion</span>
-                </div>
-            </a>
-            
-            <div class="search-bar">
-                <input type="text" id="search-input" placeholder="Search products..." onkeyup="searchProducts()">
-            </div>
-            
-            <div class="header-actions">
-                <button class="btn-primary" id="cart-btn" onclick="toggleCart()">🛒 Cart</button>
-                <button class="btn-primary" id="customer-login-btn" onclick="openCustomerLogin()">👤 Login</button>
-                <button class="btn-secondary hidden" id="logout-btn" onclick="logout()">Logout</button>
-                <button class="btn-secondary" id="admin-login-btn" onclick="goToPage('admin-login')">⚙️ Admin</button>
-            </div>
-        </div>
-    </header>
+  <!-- ─────────────────────────────────────────
+       NAV BAR  (preserve existing IDs/classes)
+  ───────────────────────────────────────────── -->
+  <nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">ÉCLAT</a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/collections">Collections</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+      <div class="nav-actions" id="nav-actions">
+        <!-- existing cart / login JS hooks preserved -->
+        <a href="/login" class="nav-action" id="nav-login-btn">Login</a>
+        <a href="/cart" class="nav-action nav-cart" id="nav-cart-btn">
+          Bag <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
 
-    <!-- ===== ALERTS ===== -->
-    <div id="alert-container"></div>
-
-    <!-- ===== HOME PAGE ===== -->
-    <div id="home-page" class="page active">
-        <div class="hero">
-            <div class="hero-content">
-                <h1>5 best picks <em>for your wardrobe</em> this month.</h1>
-                <p>No endless scrolling. No confusion.</p>
-            </div>
-        </div>
-
-        <div class="categories-container">
-            <!-- Category 1: Premium Co-ord Set -->
-            <div class="category-section">
-                <div class="category-header">
-                    <h2 class="category-title" data-index="01 —">Premium Co-ord Set</h2>
-                </div>
-                <div class="products-grid" id="category-1">
-                    <!-- Products loaded here -->
-                </div>
-            </div>
-
-            <!-- Category 2: Oversized Graphic T-Shirt -->
-            <div class="category-section">
-                <div class="category-header">
-                    <h2 class="category-title" data-index="02 —">Oversized Graphic T-Shirt</h2>
-                </div>
-                <div class="products-grid" id="category-2">
-                    <!-- Products loaded here -->
-                </div>
-            </div>
-
-            <!-- Category 3: Elegant Ethnic Kurti Set -->
-            <div class="category-section">
-                <div class="category-header">
-                    <h2 class="category-title" data-index="03 —">Elegant Ethnic Kurti Set</h2>
-                </div>
-                <div class="products-grid" id="category-3">
-                    <!-- Products loaded here -->
-                </div>
-            </div>
-
-            <!-- Category 4: Aesthetic Midi Dress -->
-            <div class="category-section">
-                <div class="category-header">
-                    <h2 class="category-title" data-index="04 —">Aesthetic Midi Dress</h2>
-                </div>
-                <div class="products-grid" id="category-4">
-                    <!-- Products loaded here -->
-                </div>
-            </div>
-
-            <!-- Category 5: Activewear Set -->
-            <div class="category-section">
-                <div class="category-header">
-                    <h2 class="category-title" data-index="05 —">Activewear Set</h2>
-                </div>
-                <div class="products-grid" id="category-5">
-                    <!-- Products loaded here -->
-                </div>
-            </div>
-        </div>
+  <!-- ─────────────────────────────────────────
+       HERO SECTION
+  ───────────────────────────────────────────── -->
+  <section class="hero" id="hero">
+    <div class="hero-image-col">
+      <div class="hero-img-wrap">
+        <!-- Replace src with your actual hero image -->
+        <img
+          src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80"
+          alt="Fashion hero look"
+          class="hero-img"
+          id="hero-main-img"
+        />
+        <div class="hero-img-badge">May Edit</div>
+      </div>
     </div>
 
-    <!-- ===== ADMIN LOGIN PAGE ===== -->
-    <div id="admin-login-page" class="page">
-        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f5f5f5; padding: 1rem;">
-            <div class="auth-form">
-                <h2>Admin Login</h2>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="admin-email" placeholder="admin@example.com">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="admin-password" placeholder="Password">
-                </div>
-                <div class="auth-buttons">
-                    <button class="btn-primary" onclick="loginAdmin()">Login</button>
-                    <button class="btn-secondary" onclick="goToPage('home')">Back to Store</button>
-                </div>
-            </div>
-        </div>
+    <div class="hero-text-col">
+      <p class="hero-eyebrow">Carefully chosen. Just for you.</p>
+      <h1 class="hero-heading">
+        5 best picks<br />
+        <em>for your wardrobe</em><br />
+        this month.
+      </h1>
+      <p class="hero-sub">No endless scrolling. No confusion.<br />Only what matters.</p>
+      <a href="#picks" class="hero-cta" id="hero-cta">
+        Explore the Edit
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────
+       PICKS SECTION
+  ───────────────────────────────────────────── -->
+  <section class="picks" id="picks">
+    <div class="picks-header">
+      <span class="picks-num">01 — 05</span>
+      <h2 class="picks-title">This Month's Edit</h2>
     </div>
 
-    <!-- ===== ADMIN DASHBOARD PAGE ===== -->
-    <div id="admin-dashboard-page" class="page">
-        <div style="min-height: 100vh; background: #f5f5f5;">
-            <!-- Admin Header -->
-            <div style="background: white; padding: 1.5rem 2rem; border-bottom: 1px solid #e8e8e8; display: flex; justify-content: space-between; align-items: center;">
-                <h1 style="font-size: 1.5rem; color: #2c2c2c;">Admin Dashboard</h1>
-                <button class="btn-secondary" onclick="logoutAdmin()">Logout</button>
-            </div>
-
-            <!-- Admin Layout -->
-            <div style="max-width: 1400px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: 250px 1fr; gap: 2rem;">
-                
-                <!-- Sidebar -->
-                <div style="background: white; border-radius: 12px; padding: 1.5rem; height: fit-content; border: 1px solid #e8e8e8;">
-                    <button class="nav-btn active" onclick="switchAdminTab('dashboard')" style="display: block; width: 100%; text-align: left; padding: 0.75rem 1rem; background: #2c2c2c; color: white; border: none; border-radius: 6px; margin-bottom: 0.5rem; cursor: pointer; font-weight: 600;">📊 Dashboard</button>
-                    <button class="nav-btn" onclick="switchAdminTab('products')" style="display: block; width: 100%; text-align: left; padding: 0.75rem 1rem; background: none; color: #666; border: none; border-radius: 6px; margin-bottom: 0.5rem; cursor: pointer; font-weight: 600;">📦 Products</button>
-                    <button class="nav-btn" onclick="switchAdminTab('orders')" style="display: block; width: 100%; text-align: left; padding: 0.75rem 1rem; background: none; color: #666; border: none; border-radius: 6px; margin-bottom: 0.5rem; cursor: pointer; font-weight: 600;">🛒 Orders</button>
-                    <button class="nav-btn" onclick="switchAdminTab('customers')" style="display: block; width: 100%; text-align: left; padding: 0.75rem 1rem; background: none; color: #666; border: none; border-radius: 6px; margin-bottom: 0.5rem; cursor: pointer; font-weight: 600;">👥 Customers</button>
-                </div>
-
-                <!-- Content -->
-                <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e8e8e8;">
-                    
-                    <!-- Dashboard Tab -->
-                    <div id="dashboard-tab" class="admin-tab" style="display: block;">
-                        <h2 style="margin-bottom: 2rem; color: #2c2c2c;">Dashboard Overview</h2>
-                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
-                            <div style="background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%); color: white; padding: 1.5rem; border-radius: 12px;">
-                                <div style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;" id="stat-products">0</div>
-                                <div style="font-size: 0.9rem; opacity: 0.9;">Total Products</div>
-                            </div>
-                            <div style="background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%); color: white; padding: 1.5rem; border-radius: 12px;">
-                                <div style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;" id="stat-orders">0</div>
-                                <div style="font-size: 0.9rem; opacity: 0.9;">Total Orders</div>
-                            </div>
-                            <div style="background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%); color: white; padding: 1.5rem; border-radius: 12px;">
-                                <div style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;" id="stat-customers">0</div>
-                                <div style="font-size: 0.9rem; opacity: 0.9;">Total Customers</div>
-                            </div>
-                            <div style="background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%); color: white; padding: 1.5rem; border-radius: 12px;">
-                                <div style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;" id="stat-revenue">₹0</div>
-                                <div style="font-size: 0.9rem; opacity: 0.9;">Total Revenue</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Products Tab -->
-                    <div id="products-tab" class="admin-tab" style="display: none;">
-                        <h2 style="margin-bottom: 2rem; color: #2c2c2c;">Product Management</h2>
-                        
-                        <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid #e8e8e8;">
-                            <h3 style="margin-bottom: 1.5rem; color: #2c2c2c;">Add New Product</h3>
-                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
-                                <div class="form-group">
-                                    <label>Product Name</label>
-                                    <input type="text" id="admin-product-name" placeholder="E.g., Blue Co-ord Set">
-                                </div>
-                                <div class="form-group">
-                                    <label>Category</label>
-                                    <select id="admin-product-category" style="width: 100%; padding: 0.8rem; border: 1px solid #e0e0e0; border-radius: 8px; background: white; color: #2c2c2c;">
-                                        <option value="1">Premium Co-ord Set</option>
-                                        <option value="2">Oversized Graphic T-Shirt</option>
-                                        <option value="3">Elegant Ethnic Kurti Set</option>
-                                        <option value="4">Aesthetic Midi Dress</option>
-                                        <option value="5">Activewear Set</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Price (₹)</label>
-                                    <input type="number" id="admin-product-price" placeholder="1999">
-                                </div>
-                                <div class="form-group">
-                                    <label>Original Price (₹)</label>
-                                    <input type="number" id="admin-product-original" placeholder="2999">
-                                </div>
-                                <div class="form-group">
-                                    <label>Stock</label>
-                                    <input type="number" id="admin-product-stock" placeholder="50">
-                                </div>
-                                <div class="form-group">
-                                    <label>Image URL</label>
-                                    <input type="text" id="admin-product-image" placeholder="https://i.imgbb.com/...">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                <input type="text" id="admin-product-description" placeholder="Product description..." style="padding: 0.8rem; border: 1px solid #e0e0e0; border-radius: 8px; background: white;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 1rem;">
-                                <label>Video URL</label>
-                                <input type="text" id="admin-product-video" placeholder="https://youtube.com/embed/...">
-                            </div>
-                            <button class="btn-success" onclick="addProduct()" style="width: 100%;">✚ Add Product</button>
-                        </div>
-
-                        <h3 style="margin-bottom: 1rem; color: #2c2c2c;">All Products</h3>
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="background: #f9f9f9;">
-                                    <th style="padding: 1rem; text-align: left; font-weight: 700; border-bottom: 2px solid #e8e8e8;">Name</th>
-                                    <th style="padding: 1rem; text-align: left; font-weight: 700; border-bottom: 2px solid #e8e8e8;">Category</th>
-                                    <th style="padding: 1rem; text-align: left; font-weight: 700; border-bottom: 2px solid #e8e8e8;">Price</th>
-                                    <th style="padding: 1rem; text-align: left; font-weight: 700; border-bottom: 2px solid #e8e8e8;">Stock</th>
-                                    <th style="padding: 1rem; text-align: left; font-weight: 700; border-bottom: 2px solid #e8e8e8;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-products-tbody">
-                                <!-- Products listed here -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Orders Tab -->
-                    <div id="orders-tab" class="admin-tab" style="display: none;">
-                        <h2 style="margin-bottom: 2rem; color: #2c2c2c;">Orders</h2>
-                        <p style="color: #666;">No orders yet</p>
-                    </div>
-
-                    <!-- Customers Tab -->
-                    <div id="customers-tab" class="admin-tab" style="display: none;">
-                        <h2 style="margin-bottom: 2rem; color: #2c2c2c;">Customers</h2>
-                        <p style="color: #666;">No customers yet</p>
-                    </div>
-                </div>
-            </div>
+    <!-- ── CATEGORY 1: Premium Co-ord Set ── -->
+    <div class="category-row" id="cat-coord" data-category="coord-set">
+      <div class="category-label-col">
+        <span class="cat-index">01</span>
+        <h3 class="cat-name">Premium<br/>Co-ord Set</h3>
+        <p class="cat-desc">Effortlessly put-together. Matching sets that mean business—and brunch.</p>
+        <a href="/category/coord-sets" class="cat-link" data-cat-id="coord-sets">
+          Shop All →
+        </a>
+      </div>
+      <div class="products-strip" id="products-coord">
+        <!-- Product cards – replace href/src with your real product data -->
+        <div class="prod-card" data-product-id="prod-001">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?w=300&q=80" alt="Ivory Embroidered Co-ord" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-001">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Ivory Embroidered Set</p>
+            <p class="prod-price" data-price="3499">₹3,499</p>
+            <button class="prod-add" data-product-id="prod-001" data-add-to-cart>Add to Bag</button>
+          </div>
         </div>
+
+        <div class="prod-card" data-product-id="prod-002">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&q=80" alt="Beige Linen Co-ord" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-002">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Beige Linen Co-ord</p>
+            <p class="prod-price" data-price="2999">₹2,999</p>
+            <button class="prod-add" data-product-id="prod-002" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+
+        <div class="prod-card" data-product-id="prod-003">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=300&q=80" alt="Black Flared Set" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-003">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Black Flared Set</p>
+            <p class="prod-price" data-price="3199">₹3,199</p>
+            <button class="prod-add" data-product-id="prod-003" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+
+        <div class="prod-card prod-card--wide" data-product-id="prod-004">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1601762603339-fd61e28b698a?w=300&q=80" alt="White Wrap Set" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-004">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">White Wrap Set</p>
+            <p class="prod-price" data-price="2799">₹2,799</p>
+            <button class="prod-add" data-product-id="prod-004" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+
+        <div class="prod-card" data-product-id="prod-005">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&q=80" alt="Noir Power Set" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-005">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Noir Power Set</p>
+            <p class="prod-price" data-price="3699">₹3,699</p>
+            <button class="prod-add" data-product-id="prod-005" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- ===== MODALS ===== -->
+    <!-- divider -->
+    <div class="section-divider"></div>
 
-    <!-- Product Detail Modal -->
-    <div id="product-modal" class="modal">
-        <button class="modal-close" onclick="closeProductModal()">✕</button>
-        <div class="modal-content">
-            <div class="modal-images">
-                <div class="modal-main-image" id="modal-main-image">👗</div>
-                <div class="modal-thumbnails" id="modal-thumbnails">
-                    <!-- Thumbnails loaded here -->
-                </div>
-            </div>
-            
-            <div class="modal-details">
-                <div class="modal-category" id="modal-category"></div>
-                <h2 id="modal-name"></h2>
-                <div class="modal-price" id="modal-price">₹0</div>
-                <div class="modal-rating" id="modal-rating">⭐ 4.5 (120 reviews)</div>
-                <div class="modal-stock" id="modal-stock">In Stock</div>
-                <div class="modal-description" id="modal-description"></div>
-                
-                <div class="modal-video" id="modal-video-container">
-                    <iframe id="modal-video" src="" allowfullscreen></iframe>
-                </div>
-                
-                <div class="modal-quantity">
-                    <label>Quantity:</label>
-                    <button onclick="decreaseQuantity()">−</button>
-                    <input type="number" id="modal-quantity" value="1" min="1">
-                    <button onclick="increaseQuantity()">+</button>
-                </div>
-                
-                <div class="modal-actions">
-                    <button class="btn-secondary" onclick="addToCart()">Add to Cart</button>
-                    <button class="btn-primary" onclick="buyNow()">Buy Now</button>
-                </div>
-            </div>
+    <!-- ── CATEGORY 2: Oversized Graphic T-Shirt ── -->
+    <div class="category-row category-row--flip" id="cat-tshirt" data-category="graphic-tee">
+      <div class="category-label-col">
+        <span class="cat-index">02</span>
+        <h3 class="cat-name">Oversized<br/>Graphic Tee</h3>
+        <p class="cat-desc">Street-smart, always. Graphic tees that do the talking for you.</p>
+        <a href="/category/graphic-tees" class="cat-link" data-cat-id="graphic-tees">Shop All →</a>
+      </div>
+      <div class="products-strip" id="products-tshirt">
+        <div class="prod-card" data-product-id="prod-011">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=300&q=80" alt="Anime Print Tee" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-011">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Anime Print Oversized</p>
+            <p class="prod-price" data-price="999">₹999</p>
+            <button class="prod-add" data-product-id="prod-011" data-add-to-cart>Add to Bag</button>
+          </div>
         </div>
+        <div class="prod-card" data-product-id="prod-012">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1562157873-818bc0726f68?w=300&q=80" alt="White Graphic Tee" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-012">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">White Art Print Tee</p>
+            <p class="prod-price" data-price="899">₹899</p>
+            <button class="prod-add" data-product-id="prod-012" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-013">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1554568218-0f1715e72254?w=300&q=80" alt="Pink Hakuna Tee" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-013">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Pink Slogan Tee</p>
+            <p class="prod-price" data-price="849">₹849</p>
+            <button class="prod-add" data-product-id="prod-013" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-014">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&q=80" alt="Black Floral Tee" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-014">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Black Floral Print</p>
+            <p class="prod-price" data-price="1099">₹1,099</p>
+            <button class="prod-add" data-product-id="prod-014" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-015">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1527719327859-c6ce80353573?w=300&q=80" alt="Blue Varsity Tee" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-015">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Blue Varsity Oversized</p>
+            <p class="prod-price" data-price="999">₹999</p>
+            <button class="prod-add" data-product-id="prod-015" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Customer Login Modal -->
-    <div id="customer-login-modal" class="auth-modal">
-        <div class="auth-form">
-            <h2>Customer Login</h2>
-            <div class="form-group">
-                <label>Email or Mobile</label>
-                <input type="text" id="customer-email" placeholder="email@example.com">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="customer-password" placeholder="Password">
-            </div>
-            <div class="auth-buttons">
-                <button class="btn-primary" onclick="loginCustomer()">Login</button>
-                <button class="btn-secondary" onclick="closeCustomerLogin()">Close</button>
-            </div>
+    <div class="section-divider"></div>
+
+    <!-- ── CATEGORY 3: Elegant Ethnic Kurti Set ── -->
+    <div class="category-row" id="cat-kurti" data-category="kurti-set">
+      <div class="category-label-col">
+        <span class="cat-index">03</span>
+        <h3 class="cat-name">Elegant<br/>Ethnic Kurti</h3>
+        <p class="cat-desc">Rooted in tradition, styled for today. Ethnic sets that move with you.</p>
+        <a href="/category/kurti-sets" class="cat-link" data-cat-id="kurti-sets">Shop All →</a>
+      </div>
+      <div class="products-strip" id="products-kurti">
+        <div class="prod-card" data-product-id="prod-021">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1610030469668-73d8e34cf9a8?w=300&q=80" alt="Floral Kurti Set" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-021">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Floral Block Print Set</p>
+            <p class="prod-price" data-price="1599">₹1,599</p>
+            <button class="prod-add" data-product-id="prod-021" data-add-to-cart>Add to Bag</button>
+          </div>
         </div>
+        <div class="prod-card" data-product-id="prod-022">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=300&q=80" alt="Peach Kurti" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-022">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Peach Embroidered Kurti</p>
+            <p class="prod-price" data-price="1399">₹1,399</p>
+            <button class="prod-add" data-product-id="prod-022" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-023">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=300&q=80" alt="Pink Kurta Set" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-023">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Rose Pink Kurta Set</p>
+            <p class="prod-price" data-price="1799">₹1,799</p>
+            <button class="prod-add" data-product-id="prod-023" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-024">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=300&q=80" alt="Grey Kurti" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-024">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Slate Grey Straight Kurti</p>
+            <p class="prod-price" data-price="1299">₹1,299</p>
+            <button class="prod-add" data-product-id="prod-024" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-025">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=300&q=80" alt="Ivory Kurti" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-025">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Ivory Hand-embroidered</p>
+            <p class="prod-price" data-price="2199">₹2,199</p>
+            <button class="prod-add" data-product-id="prod-025" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Hover Popup -->
-    <div id="hover-popup" class="hover-popup">
-        <div class="hover-popup-image" id="hover-image">👗</div>
-        <div class="hover-popup-name" id="hover-name"></div>
-        <div class="hover-popup-price" id="hover-price"></div>
+    <div class="section-divider"></div>
+
+    <!-- ── CATEGORY 4: Aesthetic Midi Dress ── -->
+    <div class="category-row category-row--flip" id="cat-midi" data-category="midi-dress">
+      <div class="category-label-col">
+        <span class="cat-index">04</span>
+        <h3 class="cat-name">Aesthetic<br/>Midi Dress</h3>
+        <p class="cat-desc">From city walks to candlelit dinners. The dress that does it all.</p>
+        <a href="/category/midi-dresses" class="cat-link" data-cat-id="midi-dresses">Shop All →</a>
+      </div>
+      <div class="products-strip" id="products-midi">
+        <div class="prod-card" data-product-id="prod-031">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=300&q=80" alt="Floral Midi Dress" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-031">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Wildflower Midi Dress</p>
+            <p class="prod-price" data-price="2399">₹2,399</p>
+            <button class="prod-add" data-product-id="prod-031" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-032">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1572804013427-4d7ca7268217?w=300&q=80" alt="Ivory Lace Midi" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-032">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Ivory Lace Midi</p>
+            <p class="prod-price" data-price="2799">₹2,799</p>
+            <button class="prod-add" data-product-id="prod-032" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-033">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1495385794356-15371f348c31?w=300&q=80" alt="Burgundy Midi" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-033">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Burgundy Wrap Midi</p>
+            <p class="prod-price" data-price="2599">₹2,599</p>
+            <button class="prod-add" data-product-id="prod-033" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-034">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1558171813-74f4e4f36534?w=300&q=80" alt="Blush Midi" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-034">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Blush Puff-sleeve Midi</p>
+            <p class="prod-price" data-price="2299">₹2,299</p>
+            <button class="prod-add" data-product-id="prod-034" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-035">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1619086303291-0ef7699e4b31?w=300&q=80" alt="Sage Midi Dress" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-035">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Sage Polka Dot Midi</p>
+            <p class="prod-price" data-price="2199">₹2,199</p>
+            <button class="prod-add" data-product-id="prod-035" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Cart Sidebar -->
-    <div id="cart-sidebar" class="cart-sidebar">
-        <div class="cart-header">🛒 Shopping Cart</div>
-        <div class="cart-items" id="cart-items">
-            <p style="text-align: center; color: #888; padding: 2rem;">Your cart is empty</p>
+    <div class="section-divider"></div>
+
+    <!-- ── CATEGORY 5: Activewear Set ── -->
+    <div class="category-row" id="cat-active" data-category="activewear">
+      <div class="category-label-col">
+        <span class="cat-index">05</span>
+        <h3 class="cat-name">Activewear<br/>Set</h3>
+        <p class="cat-desc">Built for your best run—or just looking like you could. Performance meets polish.</p>
+        <a href="/category/activewear" class="cat-link" data-cat-id="activewear">Shop All →</a>
+      </div>
+      <div class="products-strip" id="products-active">
+        <div class="prod-card" data-product-id="prod-041">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=300&q=80" alt="White Active Set" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-041">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">White Sports Set</p>
+            <p class="prod-price" data-price="1599">₹1,599</p>
+            <button class="prod-add" data-product-id="prod-041" data-add-to-cart>Add to Bag</button>
+          </div>
         </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span id="cart-total">₹0</span>
-            </div>
-            <button class="btn-success" onclick="checkout()" style="width: 100%; margin-bottom: 0.5rem;">Checkout</button>
-            <button class="btn-secondary" onclick="toggleCart()" style="width: 100%;">Close Cart</button>
+        <div class="prod-card" data-product-id="prod-042">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1518310383802-640c2de311b6?w=300&q=80" alt="Black Activewear" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-042">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Onyx Active Set</p>
+            <p class="prod-price" data-price="1799">₹1,799</p>
+            <button class="prod-add" data-product-id="prod-042" data-add-to-cart>Add to Bag</button>
+          </div>
         </div>
+        <div class="prod-card" data-product-id="prod-043">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1551489186-cf8726f514f8?w=300&q=80" alt="Teal Active Set" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-043">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Teal Track Suit</p>
+            <p class="prod-price" data-price="2199">₹2,199</p>
+            <button class="prod-add" data-product-id="prod-043" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-044">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=300&q=80" alt="Black Jogger Set" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-044">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">Black Jogger Set</p>
+            <p class="prod-price" data-price="1699">₹1,699</p>
+            <button class="prod-add" data-product-id="prod-044" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+        <div class="prod-card" data-product-id="prod-045">
+          <div class="prod-img-wrap">
+            <img src="https://images.unsplash.com/photo-1543087903-1ac2364a7858?w=300&q=80" alt="White Sporty Set" class="prod-img" loading="lazy"/>
+            <button class="prod-wishlist" aria-label="Wishlist" data-product-id="prod-045">♡</button>
+          </div>
+          <div class="prod-info">
+            <p class="prod-name">White Sporty Co-ord</p>
+            <p class="prod-price" data-price="1499">₹1,499</p>
+            <button class="prod-add" data-product-id="prod-045" data-add-to-cart>Add to Bag</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <script>
-        // ===== GLOBAL STATE =====
-        const APP = {
-            currentUser: null,
-            currentAdmin: null,
-            cart: [],
-            products: [
-                // Category 1: Premium Co-ord Set
-                { id: 1, category: 1, name: 'White Floral Co-ord', price: 2499, originalPrice: 4999, stock: 30, description: 'Elegant white co-ord set with floral embroidery', image: '👗', video: '' },
-                { id: 2, category: 1, name: 'Beige Linen Co-ord', price: 2799, originalPrice: 5499, stock: 25, description: 'Comfortable beige linen coordinates', image: '👔', video: '' },
-                { id: 3, category: 1, name: 'Black Silk Co-ord', price: 3499, originalPrice: 6999, stock: 20, description: 'Premium black silk co-ord set', image: '⬛', video: '' },
-                { id: 4, category: 1, name: 'Cream Cotton Co-ord', price: 1999, originalPrice: 3999, stock: 40, description: 'Breathable cream cotton combination', image: '🟨', video: '' },
-                { id: 5, category: 1, name: 'Blush Pink Co-ord', price: 2399, originalPrice: 4799, stock: 35, description: 'Soft blush pink co-ord set', image: '🌸', video: '' },
+  </section><!-- /picks -->
 
-                // Category 2: Oversized Graphic T-Shirt
-                { id: 6, category: 2, name: 'Vintage Rock T-Shirt', price: 799, originalPrice: 1599, stock: 50, description: 'Oversized vintage rock graphic tee', image: '🎸', video: '' },
-                { id: 7, category: 2, name: 'Abstract Art T-Shirt', price: 899, originalPrice: 1799, stock: 45, description: 'Modern abstract art graphic design', image: '🎨', video: '' },
-                { id: 8, category: 2, name: 'Nature Graphic Tee', price: 799, originalPrice: 1599, stock: 55, description: 'Beautiful nature-inspired graphic', image: '🌿', video: '' },
-                { id: 9, category: 2, name: 'Retro Logo T-Shirt', price: 849, originalPrice: 1699, stock: 40, description: 'Retro brand logo oversized tee', image: '🏷️', video: '' },
-                { id: 10, category: 2, name: 'Neon Graphic Tee', price: 899, originalPrice: 1799, stock: 35, description: 'Vibrant neon graphic t-shirt', image: '⚡', video: '' },
+  <!-- ─────────────────────────────────────────
+       FOOTER STRIP
+  ───────────────────────────────────────────── -->
+  <footer class="site-footer" id="site-footer">
+    <div class="footer-inner">
+      <p class="footer-brand">ÉCLAT</p>
+      <p class="footer-tagline">Thoughtfully curated. Worn with intention.</p>
+      <div class="footer-links">
+        <a href="/privacy" id="footer-privacy">Privacy</a>
+        <a href="/terms" id="footer-terms">Terms</a>
+        <a href="/contact" id="footer-contact">Contact</a>
+      </div>
+      <p class="footer-copy">© 2026 Éclat Fashion. All rights reserved.</p>
+    </div>
+  </footer>
 
-                // Category 3: Elegant Ethnic Kurti Set
-                { id: 11, category: 3, name: 'Yellow Printed Kurti', price: 1599, originalPrice: 3199, stock: 30, description: 'Traditional yellow printed kurti', image: '💛', video: '' },
-                { id: 12, category: 3, name: 'Green Embroidered Kurti', price: 2199, originalPrice: 4399, stock: 25, description: 'Green kurti with embroidery work', image: '💚', video: '' },
-                { id: 13, category: 3, name: 'Pink Festive Kurti', price: 1899, originalPrice: 3799, stock: 20, description: 'Festive pink ethnic kurti', image: '🌺', video: '' },
-                { id: 14, category: 3, name: 'Orange Silk Kurti', price: 2399, originalPrice: 4799, stock: 28, description: 'Premium orange silk kurti set', image: '🧡', video: '' },
-                { id: 15, category: 3, name: 'White Ethnic Kurti', price: 1699, originalPrice: 3399, stock: 32, description: 'White elegant ethnic kurti', image: '⚪', video: '' },
-
-                // Category 4: Aesthetic Midi Dress
-                { id: 16, category: 4, name: 'Floral Midi Dress', price: 2299, originalPrice: 4599, stock: 25, description: 'Beautiful floral aesthetic midi dress', image: '🌸', video: '' },
-                { id: 17, category: 4, name: 'White Lace Midi', price: 2699, originalPrice: 5399, stock: 20, description: 'Elegant white lace midi dress', image: '💍', video: '' },
-                { id: 18, category: 4, name: 'Red Satin Midi', price: 2599, originalPrice: 5199, stock: 22, description: 'Stunning red satin midi dress', image: '❤️', video: '' },
-                { id: 19, category: 4, name: 'Blue Aesthetic Midi', price: 2399, originalPrice: 4799, stock: 30, description: 'Calm blue aesthetic midi dress', image: '💙', video: '' },
-                { id: 20, category: 4, name: 'Green Pleated Midi', price: 2299, originalPrice: 4599, stock: 28, description: 'Green pleated aesthetic midi', image: '💚', video: '' },
-
-                // Category 5: Activewear Set
-                { id: 21, category: 5, name: 'Black Sports Set', price: 1899, originalPrice: 3799, stock: 40, description: 'Professional black sports activewear', image: '⚫', video: '' },
-                { id: 22, category: 5, name: 'Blue Gym Set', price: 1799, originalPrice: 3599, stock: 45, description: 'Comfortable blue gym activewear', image: '💙', video: '' },
-                { id: 23, category: 5, name: 'Pink Yoga Set', price: 1699, originalPrice: 3399, stock: 35, description: 'Soft pink yoga activewear set', image: '🌸', video: '' },
-                { id: 24, category: 5, name: 'White Fitness Set', price: 1599, originalPrice: 3199, stock: 50, description: 'White fitness and gym wear', image: '⚪', video: '' },
-                { id: 25, category: 5, name: 'Green Sports Set', price: 1899, originalPrice: 3799, stock: 38, description: 'Green sports activewear combo', image: '💚', video: '' },
-            ],
-            orders: [],
-            customers: {}
-        };
-
-        // ===== INITIALIZATION =====
-        window.addEventListener('load', () => {
-            renderAllProducts();
-        });
-
-        // ===== PAGE NAVIGATION =====
-        function goToPage(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(page + '-page').classList.add('active');
-            window.scrollTo(0, 0);
-        }
-
-        // ===== PRODUCTS RENDERING =====
-        function renderAllProducts() {
-            for (let cat = 1; cat <= 5; cat++) {
-                const categoryProducts = APP.products.filter(p => p.category === cat);
-                const container = document.getElementById('category-' + cat);
-                if (!container) continue;
-                
-                container.innerHTML = categoryProducts.map(p => `
-                    <div class="product-card" onmouseenter="showHoverPopup(event, ${p.id})" onmouseleave="hideHoverPopup()" onclick="openProductModal(${p.id})">
-                        <div class="product-image-wrapper">
-                            ${p.image}
-                            ${p.originalPrice > p.price ? `<div class="product-discount-badge">${Math.round((1 - p.price/p.originalPrice) * 100)}% OFF</div>` : ''}
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">Category ${cat}</div>
-                            <div class="product-name">${p.name}</div>
-                            <div class="product-price-section">
-                                <span class="product-price">₹${p.price}</span>
-                                <span class="product-original-price">₹${p.originalPrice}</span>
-                            </div>
-                            <div class="product-stock ${p.stock > 0 ? 'in-stock' : 'out-of-stock'}">
-                                ${p.stock > 0 ? `${p.stock} in stock` : 'Out of stock'}
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        // ===== HOVER POPUP =====
-        function showHoverPopup(event, productId) {
-            const product = APP.products.find(p => p.id === productId);
-            if (!product) return;
-
-            const popup = document.getElementById('hover-popup');
-            document.getElementById('hover-image').textContent = product.image;
-            document.getElementById('hover-name').textContent = product.name;
-            document.getElementById('hover-price').textContent = `₹${product.price}`;
-
-            const rect = event.target.closest('.product-card').getBoundingClientRect();
-            popup.style.left = (rect.right + 15) + 'px';
-            popup.style.top = (rect.top) + 'px';
-            popup.classList.add('show');
-        }
-
-        function hideHoverPopup() {
-            document.getElementById('hover-popup').classList.remove('show');
-        }
-
-        // ===== PRODUCT MODAL =====
-        let currentProduct = null;
-
-        function openProductModal(productId) {
-            currentProduct = APP.products.find(p => p.id === productId);
-            if (!currentProduct) return;
-
-            document.getElementById('modal-category').textContent = 'Category ' + currentProduct.category;
-            document.getElementById('modal-name').textContent = currentProduct.name;
-            document.getElementById('modal-price').textContent = `₹${currentProduct.price}`;
-            document.getElementById('modal-description').textContent = currentProduct.description;
-            document.getElementById('modal-quantity').value = 1;
-            
-            document.getElementById('modal-main-image').textContent = currentProduct.image;
-
-            if (currentProduct.video) {
-                document.getElementById('modal-video-container').classList.add('show');
-                document.getElementById('modal-video').src = currentProduct.video;
-            } else {
-                document.getElementById('modal-video-container').classList.remove('show');
-            }
-
-            const thumbnails = document.getElementById('modal-thumbnails');
-            thumbnails.innerHTML = '';
-            for (let i = 0; i < 4; i++) {
-                const thumb = document.createElement('div');
-                thumb.className = 'modal-thumb' + (i === 0 ? ' active' : '');
-                thumb.textContent = currentProduct.image;
-                thumb.onclick = () => {
-                    document.getElementById('modal-main-image').textContent = currentProduct.image;
-                    document.querySelectorAll('.modal-thumb').forEach(t => t.classList.remove('active'));
-                    thumb.classList.add('active');
-                };
-                thumbnails.appendChild(thumb);
-            }
-
-            document.getElementById('product-modal').classList.add('active');
-        }
-
-        function closeProductModal() {
-            document.getElementById('product-modal').classList.remove('active');
-        }
-
-        function increaseQuantity() {
-            const input = document.getElementById('modal-quantity');
-            input.value = parseInt(input.value) + 1;
-        }
-
-        function decreaseQuantity() {
-            const input = document.getElementById('modal-quantity');
-            if (parseInt(input.value) > 1) {
-                input.value = parseInt(input.value) - 1;
-            }
-        }
-
-        function addToCart() {
-            if (!currentProduct) return;
-
-            const qty = parseInt(document.getElementById('modal-quantity').value);
-            const existing = APP.cart.find(item => item.id === currentProduct.id);
-
-            if (existing) {
-                existing.quantity += qty;
-            } else {
-                APP.cart.push({
-                    ...currentProduct,
-                    quantity: qty
-                });
-            }
-
-            updateCartUI();
-            closeProductModal();
-            showAlert('Added to cart!', 'success');
-        }
-
-        function buyNow() {
-            addToCart();
-            toggleCart();
-        }
-
-        // ===== CART MANAGEMENT =====
-        function toggleCart() {
-            document.getElementById('cart-sidebar').classList.toggle('active');
-        }
-
-        function updateCartUI() {
-            const cartItems = document.getElementById('cart-items');
-            const cartTotal = document.getElementById('cart-total');
-
-            if (APP.cart.length === 0) {
-                cartItems.innerHTML = '<p style="text-align: center; color: #888; padding: 2rem;">Your cart is empty</p>';
-                cartTotal.textContent = '₹0';
-                return;
-            }
-
-            let total = 0;
-            cartItems.innerHTML = APP.cart.map((item, idx) => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                return `
-                    <div class="cart-item">
-                        <div>
-                            <strong>${item.name}</strong><br>
-                            ₹${item.price} x ${item.quantity}
-                        </div>
-                        <button onclick="removeFromCart(${idx})" style="padding: 0.4rem 0.8rem; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">✕</button>
-                    </div>
-                `;
-            }).join('');
-
-            cartTotal.textContent = `₹${total}`;
-        }
-
-        function removeFromCart(idx) {
-            APP.cart.splice(idx, 1);
-            updateCartUI();
-        }
-
-        function checkout() {
-            if (APP.cart.length === 0) {
-                showAlert('Cart is empty', 'error');
-                return;
-            }
-
-            if (!APP.currentUser) {
-                showAlert('Please login to checkout', 'error');
-                openCustomerLogin();
-                return;
-            }
-
-            showAlert('Checkout started', 'success');
-            toggleCart();
-        }
-
-        // ===== SEARCH =====
-        function searchProducts() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const filtered = APP.products.filter(p =>
-                p.name.toLowerCase().includes(query) ||
-                p.description.toLowerCase().includes(query)
-            );
-
-            for (let cat = 1; cat <= 5; cat++) {
-                const container = document.getElementById('category-' + cat);
-                if (!container) continue;
-
-                const categoryFiltered = filtered.filter(p => p.category === cat);
-                if (categoryFiltered.length === 0) {
-                    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888;">No products found</p>';
-                } else {
-                    container.innerHTML = categoryFiltered.map(p => `
-                        <div class="product-card" onclick="openProductModal(${p.id})">
-                            <div class="product-image-wrapper">${p.image}</div>
-                            <div class="product-info">
-                                <div class="product-name">${p.name}</div>
-                                <div class="product-price-section">
-                                    <span class="product-price">₹${p.price}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('');
-                }
-            }
-        }
-
-        // ===== AUTHENTICATION =====
-        function openCustomerLogin() {
-            document.getElementById('customer-login-modal').classList.add('active');
-        }
-
-        function closeCustomerLogin() {
-            document.getElementById('customer-login-modal').classList.remove('active');
-        }
-
-        function loginCustomer() {
-            const email = document.getElementById('customer-email').value;
-            const password = document.getElementById('customer-password').value;
-
-            if (!email || !password) {
-                showAlert('Please fill all fields', 'error');
-                return;
-            }
-
-            APP.currentUser = { email, name: 'Customer' };
-            localStorage.setItem('ilarika-user', JSON.stringify(APP.currentUser));
-            
-            closeCustomerLogin();
-            document.getElementById('customer-login-btn').classList.add('hidden');
-            document.getElementById('logout-btn').classList.remove('hidden');
-            showAlert('Login successful!', 'success');
-        }
-
-        function logout() {
-            APP.currentUser = null;
-            localStorage.removeItem('ilarika-user');
-            document.getElementById('customer-login-btn').classList.remove('hidden');
-            document.getElementById('logout-btn').classList.add('hidden');
-            showAlert('Logged out', 'success');
-        }
-
-        // ===== ADMIN =====
-        function loginAdmin() {
-            const email = document.getElementById('admin-email').value;
-            const password = document.getElementById('admin-password').value;
-
-            if (!email || !password) {
-                showAlert('Please fill all fields', 'error');
-                return;
-            }
-
-            // Simple demo login
-            APP.currentAdmin = { email, name: 'Admin' };
-            localStorage.setItem('ilarika-admin', JSON.stringify(APP.currentAdmin));
-            
-            goToPage('admin-dashboard');
-            loadAdminData();
-            showAlert('Admin login successful!', 'success');
-        }
-
-        function logoutAdmin() {
-            APP.currentAdmin = null;
-            localStorage.removeItem('ilarika-admin');
-            goToPage('home');
-            showAlert('Logged out from admin', 'success');
-        }
-
-        function switchAdminTab(tab) {
-            document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
-            document.getElementById(tab + '-tab').style.display = 'block';
-
-            // Update button styles
-            document.querySelectorAll('.nav-btn').forEach(b => {
-                b.style.background = 'none';
-                b.style.color = '#666';
-            });
-            event.target.style.background = '#2c2c2c';
-            event.target.style.color = 'white';
-            
-            loadAdminData();
-        }
-
-        function loadAdminData() {
-            document.getElementById('stat-products').textContent = APP.products.length;
-            document.getElementById('stat-orders').textContent = APP.orders.length;
-
-            const productsTable = document.getElementById('admin-products-tbody');
-            productsTable.innerHTML = APP.products.map(p => `
-                <tr style="border-bottom: 1px solid #f0f0f0;">
-                    <td style="padding: 1rem;">${p.name}</td>
-                    <td style="padding: 1rem;">Category ${p.category}</td>
-                    <td style="padding: 1rem;">₹${p.price}</td>
-                    <td style="padding: 1rem;">${p.stock}</td>
-                    <td style="padding: 1rem;">
-                        <button onclick="deleteProduct(${p.id})" class="btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Delete</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function addProduct() {
-            const name = document.getElementById('admin-product-name').value;
-            const category = parseInt(document.getElementById('admin-product-category').value);
-            const price = parseInt(document.getElementById('admin-product-price').value);
-            const original = parseInt(document.getElementById('admin-product-original').value);
-            const stock = parseInt(document.getElementById('admin-product-stock').value);
-            const image = document.getElementById('admin-product-image').value;
-            const description = document.getElementById('admin-product-description').value;
-            const video = document.getElementById('admin-product-video').value;
-
-            if (!name || !price || !stock) {
-                showAlert('Please fill required fields', 'error');
-                return;
-            }
-
-            const newProduct = {
-                id: Math.max(...APP.products.map(p => p.id), 0) + 1,
-                category,
-                name,
-                price,
-                originalPrice: original || price,
-                stock,
-                description,
-                image: image || '👗',
-                video
-            };
-
-            APP.products.push(newProduct);
-            renderAllProducts();
-            loadAdminData();
-
-            // Clear form
-            document.getElementById('admin-product-name').value = '';
-            document.getElementById('admin-product-price').value = '';
-            document.getElementById('admin-product-original').value = '';
-            document.getElementById('admin-product-stock').value = '';
-            document.getElementById('admin-product-image').value = '';
-            document.getElementById('admin-product-description').value = '';
-            document.getElementById('admin-product-video').value = '';
-
-            showAlert('Product added!', 'success');
-        }
-
-        function deleteProduct(id) {
-            if (confirm('Delete this product?')) {
-                APP.products = APP.products.filter(p => p.id !== id);
-                renderAllProducts();
-                loadAdminData();
-                showAlert('Product deleted!', 'success');
-            }
-        }
-
-        // ===== UTILITIES =====
-        function showAlert(message, type = 'info') {
-            const container = document.getElementById('alert-container');
-            const alert = document.createElement('div');
-            alert.className = `alert ${type}`;
-            alert.textContent = message;
-            container.appendChild(alert);
-
-            setTimeout(() => alert.remove(), 3000);
-        }
-    </script>
+  <script src="ui.js"></script>
 </body>
 </html>
