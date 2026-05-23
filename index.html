@@ -5,91 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ilarika - Premium Fashion Store</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://checkout.razorpay.com/v1/checkout.js">
-const CMS_KEY='ilk_cms';
-
-function getCMS(){
-return JSON.parse(localStorage.getItem(CMS_KEY)||JSON.stringify({
-privacy:'Privacy policy content here',
-faq:'FAQ content here',
-contact:'Contact details here',
-email:'support@ilarika.in',
-address:'Chennai, Tamil Nadu'
-}));
-}
-
-function saveCMS(data){
-localStorage.setItem(CMS_KEY,JSON.stringify(data));
-}
-
-function openCMSPage(type){
-const cms=getCMS();
-
-document.getElementById('cms-title').innerText=
- type==='privacy' ? 'Privacy Policy' :
- type==='faq' ? 'FAQ' :
- 'Contact Details';
-
-const content=
- type==='privacy' ? cms.privacy :
- type==='faq' ? cms.faq :
- `${cms.contact}<br><br>Email: ${cms.email}<br><br>Address: ${cms.address}`;
-
- document.getElementById('cms-content').innerHTML=content;
- document.getElementById('cms-modal').classList.add('active');
-}
-
-function closeCMSModal(){
-document.getElementById('cms-modal').classList.remove('active');
-}
-
-function populateCategoryDropdown(){
-const select=document.getElementById('admin-product-category');
-if(!select)return;
-
-const categories=DB.get('categories');
-select.innerHTML='';
-
-categories.forEach(cat=>{
-const opt=document.createElement('option');
-opt.value=cat.id;
-opt.innerText=cat.name;
-select.appendChild(opt);
-});
-}
-
-function addCategory(){
-const name=gv('new-cat-name');
-const desc=gv('new-cat-desc');
-
-if(!name){
-showAlert('Enter category name','error');
-return;
-}
-
-const categories=DB.get('categories');
-
-categories.push({
-id:uid('cat'),
-name,
-description:desc,
-createdAt:now()
-});
-
-DB.set('categories',categories);
-
-sv('new-cat-name','');
-sv('new-cat-desc','');
-
-if(typeof renderCategoriesAdmin==='function') renderCategoriesAdmin();
-if(typeof renderAllCategories==='function') renderAllCategories();
-
-populateCategoryDropdown();
-
-showAlert('Category Added Successfully','success');
-}
-
-</script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
 :root{--cream:#F5F0E8;--cream-dark:#EDE7D8;--cream-mid:#FAF7F2;--ink:#1C1916;--ink-soft:#4A4540;--ink-light:#9A948C;--accent:#C9A96E;--accent-deep:#A07840;--white:#FFF;--border:#E8E0D0;--card-bg:#FDFAF5;--success:#2E7D52;--danger:#C0392B;--warn:#E67E22;--radius:18px;--radius-sm:10px;--shadow:0 4px 24px rgba(28,25,22,.07);--shadow-lg:0 12px 40px rgba(28,25,22,.13);--font-d:'Playfair Display',Georgia,serif;--font-b:'DM Sans',sans-serif;--t:.28s cubic-bezier(.4,0,.2,1)}
 *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
@@ -144,35 +60,25 @@ header{background:var(--cream-mid);padding:0 2.5rem;border-bottom:1px solid var(
 .category-title::before{content:attr(data-index);display:inline-block;font-family:var(--font-b);font-size:.62rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-right:.8rem;vertical-align:middle;font-weight:500}
 .category-subtitle{font-size:.8rem;color:var(--ink-light)}
 /* PRODUCT GRID */
-.products-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1.3rem}
-
-.product-card{
-position:relative;
-cursor:pointer;
-overflow:hidden;
-border-radius:var(--radius);
-background:var(--card-bg);
-transition:all .35s cubic-bezier(.4,0,.2,1);
-border:1px solid var(--border);
-box-shadow:var(--shadow)
-}
-.product-card:hover{
-transform:translateY(-8px) scale(1.02);
-box-shadow:0 20px 40px rgba(0,0,0,.12);
-z-index:10
-}
-
-.product-image-wrapper{width:100%;height:230px;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:4rem;overflow:hidden;position:relative;border-radius:var(--radius) var(--radius) 0 0}
-.product-image-wrapper img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
-.product-card:hover .product-image-wrapper img{transform:scale(1.05)}
+.products-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1.4rem}
+.product-card{position:relative;cursor:pointer;overflow:hidden;border-radius:var(--radius);background:var(--card-bg);transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s ease;border:1px solid var(--border);box-shadow:var(--shadow)}
+.product-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,.12)}
+/* Instagram portrait ratio 4:5 */
+.product-image-wrapper{width:100%;aspect-ratio:4/5;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:4rem;overflow:hidden;position:relative;border-radius:var(--radius) var(--radius) 0 0}
+.product-image-wrapper img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+/* Zoom in on hover — NO external popup */
+.product-card:hover .product-image-wrapper img{transform:scale(1.1)}
 .product-discount-badge{position:absolute;top:10px;right:10px;background:var(--accent);color:#fff;padding:.25rem .6rem;border-radius:50px;font-size:.65rem;font-weight:600;z-index:10}
-.product-info{padding:1rem 1.1rem 1.1rem}
-.product-category{font-size:.6rem;text-transform:uppercase;letter-spacing:.14em;color:var(--accent-deep);font-weight:500;margin-bottom:.25rem}
-.product-name{font-size:.85rem;font-weight:500;color:var(--ink);margin-bottom:.4rem;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.product-price-section{display:flex;gap:.6rem;align-items:center;margin-bottom:.4rem}
+/* Quick view label fades in on card hover */
+.product-card::after{content:'Quick View';position:absolute;bottom:72px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(28,25,22,.82);color:#fff;padding:.45rem 1rem;border-radius:50px;font-size:.7rem;letter-spacing:.08em;opacity:0;transition:all .3s ease;pointer-events:none;white-space:nowrap;backdrop-filter:blur(8px)}
+.product-card:hover::after{opacity:1;transform:translateX(-50%) translateY(0)}
+.product-info{padding:.85rem 1rem 1rem}
+.product-category{font-size:.6rem;text-transform:uppercase;letter-spacing:.14em;color:var(--accent-deep);font-weight:500;margin-bottom:.2rem}
+.product-name{font-size:.85rem;font-weight:500;color:var(--ink);margin-bottom:.35rem;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-price-section{display:flex;gap:.6rem;align-items:center;margin-bottom:.35rem}
 .product-price{font-family:var(--font-d);font-size:.95rem;font-weight:600;color:var(--accent-deep)}
 .product-original-price{font-size:.78rem;color:var(--ink-light);text-decoration:line-through}
-.product-stock{font-size:.7rem;color:var(--ink-light)}
+.product-stock{font-size:.68rem;color:var(--ink-light)}
 .product-stock.in-stock{color:var(--success)}.product-stock.out-of-stock{color:var(--danger)}
 /* PRODUCT MODAL */
 .modal{display:none;position:fixed;inset:0;background:rgba(28,25,22,.6);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;padding:1rem;overflow-y:auto}
@@ -344,61 +250,22 @@ z-index:10
 @media(max-width:900px){.admin-body{grid-template-columns:1fr}.admin-sidebar{position:static}.account-grid{grid-template-columns:1fr}.products-grid{grid-template-columns:repeat(3,1fr)}.modal-content{grid-template-columns:1fr}.analytics-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.products-grid{grid-template-columns:repeat(2,1fr)}.header-content{flex-wrap:wrap;height:auto;padding:.7rem 0}.search-bar{order:3;width:100%;max-width:none}.stat-grid{grid-template-columns:1fr 1fr}.admin-form-grid{grid-template-columns:1fr 1fr}.modal-content{padding:1.2rem}}
 
-.product-image-wrapper{position:relative;overflow:hidden}
-.product-image-wrapper img{transition:transform .45s ease}
-.product-card:hover .product-image-wrapper img{transform:scale(1.08)}
-.product-card::after{
-content:'Quick View';
-position:absolute;
-bottom:20px;
-left:50%;
-transform:translateX(-50%) translateY(20px);
-background:rgba(28,25,22,.85);
-color:#fff;
-padding:.55rem 1rem;
-border-radius:50px;
-font-size:.72rem;
-letter-spacing:.08em;
-opacity:0;
-transition:all .3s ease;
-backdrop-filter:blur(10px)
-}
-.product-card:hover::after{
-opacity:1;
-transform:translateX(-50%) translateY(0)
-}
-.site-footer{
-background:var(--ink);
-color:var(--cream);
-padding:4rem 2rem;
-margin-top:4rem
-}
-.footer-grid{
-max-width:1400px;
-margin:auto;
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:2rem
-}
-.site-footer h3,.site-footer h4{
-margin-bottom:1rem;
-font-family:var(--font-d)
-}
-.site-footer p,.site-footer a{
-font-size:.85rem;
-opacity:.8;
-display:block;
-margin-bottom:.5rem;
-color:inherit
-}
+/* CMS MODAL */
+.cms-modal-body{max-width:780px;width:100%;background:var(--cream-mid);border-radius:24px;padding:2.5rem;max-height:85vh;overflow-y:auto;position:relative;border:1px solid var(--border);box-shadow:0 24px 60px rgba(28,25,22,.2)}
+.cms-modal-body h2{font-family:var(--font-d);font-size:1.6rem;color:var(--ink);margin-bottom:1.5rem}
+.cms-modal-body p,.cms-modal-body li{font-size:.9rem;color:var(--ink-soft);line-height:1.9;margin-bottom:.6rem}
+/* MODAL ANIMATION */
 .modal-content{animation:modalFade .35s ease}
-@keyframes modalFade{
-from{opacity:0;transform:translateY(30px) scale(.96)}
-to{opacity:1;transform:none}
-}
-@media(max-width:768px){
-.footer-grid{grid-template-columns:1fr}
-}
+@keyframes modalFade{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:none}}
+/* FOOTER */
+.site-footer{background:var(--ink);color:var(--cream);padding:4rem 2rem;margin-top:4rem}
+.footer-grid{max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem}
+.site-footer h3,.site-footer h4{margin-bottom:1rem;font-family:var(--font-d)}
+.site-footer p,.site-footer a{font-size:.85rem;opacity:.8;display:block;margin-bottom:.5rem;color:inherit;cursor:pointer}
+.site-footer a:hover{opacity:1}
+.footer-bottom{max-width:1400px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid rgba(245,240,232,.15);font-size:.75rem;opacity:.5;text-align:center}
+@media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -609,7 +476,36 @@ to{opacity:1;transform:none}
           <div id="admin-tickets-list"></div>
         </div>
 
-        <!-- SETTINGS TAB -->
+        <!-- CMS TAB -->
+        <div id="admin-tab-cms" class="admin-tab">
+          <h2>🌐 Footer & CMS Content</h2>
+          <p style="font-size:.82rem;color:var(--ink-light);margin-bottom:1.5rem">Everything here controls what appears on your live website footer and policy pages.</p>
+          <div class="admin-form-card">
+            <h3>Brand & Footer Info</h3>
+            <div class="admin-form-grid two">
+              <div class="form-group"><label>Brand Name</label><input type="text" id="cms-brand-name" placeholder="Ilarika"></div>
+              <div class="form-group"><label>Tagline</label><input type="text" id="cms-tagline" placeholder="Premium curated fashion…"></div>
+              <div class="form-group"><label>Support Email</label><input type="email" id="cms-email" placeholder="support@ilarika.in"></div>
+              <div class="form-group"><label>Phone Number</label><input type="tel" id="cms-phone" placeholder="+91 9999999999"></div>
+            </div>
+            <div class="form-row full" style="margin-bottom:1rem">
+              <div class="form-group"><label>Registered Address</label><input type="text" id="cms-address" placeholder="Chennai, Tamil Nadu, India"></div>
+            </div>
+          </div>
+          <div class="admin-form-card">
+            <h3>Privacy Policy</h3>
+            <div class="form-group"><label>Content (HTML supported)</label><textarea id="cms-privacy" style="min-height:160px;font-size:.8rem" placeholder="Your privacy policy content…"></textarea></div>
+          </div>
+          <div class="admin-form-card">
+            <h3>FAQ</h3>
+            <div class="form-group"><label>Content (HTML supported)</label><textarea id="cms-faq" style="min-height:160px;font-size:.8rem" placeholder="Your FAQ content…"></textarea></div>
+          </div>
+          <div class="admin-form-card">
+            <h3>Contact Page Text</h3>
+            <div class="form-group"><label>Intro text (HTML supported)</label><textarea id="cms-contact" style="min-height:100px;font-size:.8rem" placeholder="We're here to help!"></textarea></div>
+          </div>
+          <button class="btn-success" onclick="saveCMSAdmin()" style="width:100%;padding:1rem;font-size:.95rem">💾 Save & Publish All Changes Live</button>
+        </div>
         <div id="admin-tab-settings" class="admin-tab">
           <h2>Store Settings</h2>
           <div class="admin-form-card">
@@ -691,18 +587,38 @@ to{opacity:1;transform:none}
     <div class="modal-images">
       <div class="modal-main-image" id="modal-main-image">👗</div>
       <div class="modal-thumbnails" id="modal-thumbnails"></div>
+      <!-- Video tab -->
+      <div id="modal-video-container" class="modal-video" style="display:none;margin-top:.6rem">
+        <iframe id="modal-video" src="" allowfullscreen loading="lazy" style="width:100%;height:200px;border:none;border-radius:var(--radius-sm)"></iframe>
+      </div>
+      <div id="modal-media-tabs" style="display:flex;gap:.5rem;margin-top:.6rem"></div>
     </div>
     <div class="modal-details">
       <div class="modal-category" id="modal-category"></div>
       <h2 id="modal-name"></h2>
-      <div class="modal-price-wrap"><div class="modal-price" id="modal-price">₹0</div><div class="modal-original-price" id="modal-original-price"></div></div>
-      <div class="modal-rating">⭐ 4.5 (verified reviews)</div>
+      <div class="modal-price-wrap">
+        <div class="modal-price" id="modal-price">₹0</div>
+        <div class="modal-original-price" id="modal-original-price"></div>
+        <div id="modal-discount-tag" style="display:none;background:var(--accent);color:#fff;font-size:.65rem;padding:.2rem .6rem;border-radius:50px;font-weight:600;align-self:center"></div>
+      </div>
+      <div class="modal-rating">⭐ 4.5 · Verified Reviews</div>
       <div class="modal-stock-badge" id="modal-stock-badge">✓ In Stock</div>
       <div class="modal-description" id="modal-description"></div>
-      <div id="modal-size-section" style="display:none;margin-bottom:1.2rem"><label style="font-size:.78rem;font-weight:500;color:var(--ink-soft);display:block;margin-bottom:.5rem">Select Size</label><div class="size-options" id="modal-sizes"></div></div>
-      <div class="modal-video" id="modal-video-container"><iframe id="modal-video" src="" allowfullscreen loading="lazy"></iframe></div>
-      <div class="modal-quantity"><label>Qty:</label><button onclick="decreaseQuantity()">−</button><input type="number" id="modal-quantity" value="1" min="1"><button onclick="increaseQuantity()">+</button></div>
-      <div class="modal-actions"><button class="btn-secondary" onclick="addToCart()">Add to Bag</button><button class="btn-primary" onclick="buyNow()">Buy Now</button></div>
+      <div id="modal-size-section" style="display:none;margin-bottom:1.2rem">
+        <label style="font-size:.78rem;font-weight:500;color:var(--ink-soft);display:block;margin-bottom:.5rem">Select Size</label>
+        <div class="size-options" id="modal-sizes"></div>
+      </div>
+      <div class="modal-quantity">
+        <label>Qty:</label>
+        <button onclick="decreaseQuantity()">−</button>
+        <input type="number" id="modal-quantity" value="1" min="1">
+        <button onclick="increaseQuantity()">+</button>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="addToCart()">🛍 Add to Bag</button>
+        <button class="btn-primary" onclick="buyNow()">⚡ Buy Now</button>
+      </div>
+      <div style="margin-top:1rem;font-size:.72rem;color:var(--ink-light);text-align:center">🔒 Secure checkout · Free returns · COD available</div>
     </div>
   </div>
 </div>
@@ -765,10 +681,6 @@ to{opacity:1;transform:none}
       <div class="auth-link">Have account? <span onclick="switchAuthTab('login',null)">Login</span></div>
     </div>
   </div>
-</div>
-
-<div class="hover-popup-name" id="hover-name"></div>
-  <div class="hover-popup-price" id="hover-price"></div>
 </div>
 
 <!-- CART SIDEBAR -->
@@ -1570,127 +1482,230 @@ async function syncAllData(){
   showAlert('All data synced to Google Sheets!','success');
 }
 
+// ── CMS SYSTEM ──
 const CMS_KEY='ilk_cms';
-
 function getCMS(){
-return JSON.parse(localStorage.getItem(CMS_KEY)||JSON.stringify({
-privacy:'Privacy policy content here',
-faq:'FAQ content here',
-contact:'Contact details here',
-email:'support@ilarika.in',
-address:'Chennai, Tamil Nadu'
-}));
+  return JSON.parse(localStorage.getItem(CMS_KEY)||JSON.stringify({
+    privacy:`<h3>Privacy Policy</h3><p>We collect only the information needed to process your order and improve your experience. Your data is never sold to third parties.</p><p>We use your name, email, phone and address solely for order fulfillment and customer support.</p><p>Payments are handled securely via Razorpay. We do not store card details.</p><p>You may request deletion of your account and data at any time by emailing us.</p>`,
+    faq:`<h3>Frequently Asked Questions</h3><p><strong>Q: How long does delivery take?</strong><br>A: 3–7 business days across India.</p><p><strong>Q: Can I return a product?</strong><br>A: Yes, within 7 days of delivery. Item must be unused and in original packaging.</p><p><strong>Q: How do I track my order?</strong><br>A: You will receive a tracking link via email once your order is shipped.</p><p><strong>Q: Do you offer COD?</strong><br>A: Yes, Cash on Delivery is available for orders up to ₹5,000.</p><p><strong>Q: How do I contact support?</strong><br>A: Email us at support@ilarika.in or use the Support Ticket feature in your account.</p>`,
+    contact:`<h3>Contact Us</h3><p>We're here to help!</p>`,
+    email:'support@ilarika.in',
+    phone:'+91 9999999999',
+    address:'Chennai, Tamil Nadu, India',
+    brandName:'Ilarika',
+    tagline:'Premium curated fashion for modern wardrobes.'
+  }));
 }
-
-function saveCMS(data){
-localStorage.setItem(CMS_KEY,JSON.stringify(data));
-}
+function saveCMS(data){localStorage.setItem(CMS_KEY,JSON.stringify(data));}
 
 function openCMSPage(type){
-const cms=getCMS();
+  const cms=getCMS();
+  document.getElementById('cms-title').textContent=type==='privacy'?'Privacy Policy':type==='faq'?'Frequently Asked Questions':'Contact Us';
+  let content=type==='privacy'?cms.privacy:type==='faq'?cms.faq:
+    `${cms.contact}<br><br><p><strong>📧 Email:</strong> ${cms.email}</p><p><strong>📞 Phone:</strong> ${cms.phone}</p><p><strong>🏢 Address:</strong> ${cms.address}</p>`;
+  document.getElementById('cms-content').innerHTML=content;
+  document.getElementById('cms-modal').classList.add('active');
+}
+function closeCMSModal(){document.getElementById('cms-modal').classList.remove('active')}
 
-document.getElementById('cms-title').innerText=
- type==='privacy' ? 'Privacy Policy' :
- type==='faq' ? 'FAQ' :
- 'Contact Details';
-
-const content=
- type==='privacy' ? cms.privacy :
- type==='faq' ? cms.faq :
- `${cms.contact}<br><br>Email: ${cms.email}<br><br>Address: ${cms.address}`;
-
- document.getElementById('cms-content').innerHTML=content;
- document.getElementById('cms-modal').classList.add('active');
+function loadFooterFromCMS(){
+  const cms=getCMS();
+  const set=(id,v)=>{const e=document.getElementById(id);if(e&&v)e.textContent=v};
+  set('footer-brand',cms.brandName);set('footer-tagline',cms.tagline);
+  set('footer-email-display',cms.email);set('footer-phone-display',cms.phone);
+  set('footer-address-display',cms.address);
 }
 
-function closeCMSModal(){
-document.getElementById('cms-modal').classList.remove('active');
+// ── FIX: renderCategoryOptions (alias for admin dropdown) ──
+function renderCategoryOptions(){
+  const cats=DB.get('categories');
+  const sel=document.getElementById('admin-product-category');
+  if(sel)sel.innerHTML=cats.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
 }
 
-function populateCategoryDropdown(){
-const select=document.getElementById('admin-product-category');
-if(!select)return;
-
-const categories=DB.get('categories');
-select.innerHTML='';
-
-categories.forEach(cat=>{
-const opt=document.createElement('option');
-opt.value=cat.id;
-opt.innerText=cat.name;
-select.appendChild(opt);
-});
-}
-
+// ── FIX: addCategory — fully working, updates frontend immediately ──
 function addCategory(){
-const name=gv('new-cat-name');
-const desc=gv('new-cat-desc');
-
-if(!name){
-showAlert('Enter category name','error');
-return;
+  const name=gv('new-cat-name');const desc=gv('new-cat-desc');
+  if(!name){showAlert('Enter category name','error');return}
+  const cats=DB.get('categories');
+  cats.push({id:uid('cat'),name,description:desc,createdAt:now()});
+  DB.set('categories',cats);
+  sv('new-cat-name','');sv('new-cat-desc','');
+  renderAdminCategories();renderCategoryOptions();
+  renderAllCategories(); // ← This is the key fix — updates frontend immediately
+  showAlert('Category "'+name+'" added and live on frontend!','success');
 }
 
-const categories=DB.get('categories');
-
-categories.push({
-id:uid('cat'),
-name,
-description:desc,
-createdAt:now()
-});
-
-DB.set('categories',categories);
-
-sv('new-cat-name','');
-sv('new-cat-desc','');
-
-if(typeof renderCategoriesAdmin==='function') renderCategoriesAdmin();
-if(typeof renderAllCategories==='function') renderAllCategories();
-
-populateCategoryDropdown();
-
-showAlert('Category Added Successfully','success');
+// ── FIX: renderAdminCategories ──
+function renderAdminCategories(){
+  const cats=DB.get('categories');const prods=DB.get('products');
+  const el=document.getElementById('categories-list');if(!el)return;
+  el.innerHTML=cats.map(c=>{
+    const count=prods.filter(p=>p.categoryId===c.id).length;
+    return`<div style="display:flex;align-items:center;justify-content:space-between;padding:1rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--cream-mid);margin-bottom:.6rem">
+      <div><strong style="font-size:.9rem">${c.name}</strong>${c.description?`<span style="font-size:.75rem;color:var(--ink-light);margin-left:.8rem">${c.description}</span>`:''}<span style="font-size:.72rem;color:var(--ink-light);margin-left:.8rem">(${count} products)</span></div>
+      <div style="display:flex;gap:.5rem">
+        <button class="btn-secondary" onclick="renameCategory('${c.id}')" style="padding:.3rem .7rem;font-size:.72rem;border-radius:var(--radius-sm)">Rename</button>
+        <button class="btn-danger" onclick="deleteCategory('${c.id}')" style="padding:.3rem .7rem;font-size:.72rem">Delete</button>
+      </div>
+    </div>`;
+  }).join('')||'<p style="color:var(--ink-light);font-size:.85rem">No categories yet.</p>';
 }
+function renameCategory(id){
+  const cat=DB.get('categories').find(c=>c.id===id);if(!cat)return;
+  const n=prompt('Rename category:',cat.name);
+  if(n&&n.trim()){DB.update('categories',id,{name:n.trim()});renderAdminCategories();renderCategoryOptions();renderAllCategories();showAlert('Category renamed!','success');}
+}
+function deleteCategory(id){
+  const count=DB.get('products').filter(p=>p.categoryId===id).length;
+  if(count&&!confirm('This category has '+count+' products. Delete anyway?'))return;
+  DB.remove('categories',id);renderAdminCategories();renderCategoryOptions();renderAllCategories();showAlert('Category deleted','success');
+}
+
+// ── FIX: openProductModal — 5 images + video in same modal ──
+function openProductModal(pid){
+  const p=DB.get('products').find(x=>x.id===pid);if(!p)return;
+  APP.currentProduct=p;
+  const cat=DB.get('categories').find(c=>c.id===p.categoryId)||{name:''};
+  document.getElementById('modal-category').textContent=cat.name;
+  document.getElementById('modal-name').textContent=p.name;
+  document.getElementById('modal-price').textContent=fmt(p.price);
+  const op=document.getElementById('modal-original-price');
+  op.textContent=p.originalPrice>p.price?fmt(p.originalPrice):'';
+  const dtag=document.getElementById('modal-discount-tag');
+  if(p.originalPrice>p.price){const d=Math.round((1-p.price/p.originalPrice)*100);dtag.textContent=d+'% OFF';dtag.style.display='flex';}
+  else dtag.style.display='none';
+  const sb=document.getElementById('modal-stock-badge');
+  sb.textContent=p.stock>0?'✓ In Stock ('+p.stock+' left)':'✗ Out of Stock';
+  sb.className='modal-stock-badge'+(p.stock<=0?' oos':'');
+  document.getElementById('modal-description').textContent=p.description||'';
+  document.getElementById('modal-quantity').value=1;
+  // Main image
+  const mainImg=document.getElementById('modal-main-image');
+  const imgs=p.images&&p.images.length?p.images:[];
+  mainImg.innerHTML=imgs.length?`<img src="${imgs[0]}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover">`:'<span style="font-size:5rem">👗</span>';
+  // Thumbnails (up to 5 images)
+  const thumbs=document.getElementById('modal-thumbnails');thumbs.innerHTML='';
+  if(imgs.length){
+    imgs.slice(0,5).forEach((img,i)=>{
+      const t=document.createElement('div');t.className='modal-thumb'+(i===0?' active':'');
+      t.innerHTML=`<img src="${img}" alt="View ${i+1}" style="width:100%;height:100%;object-fit:cover">`;
+      t.onclick=()=>{
+        mainImg.innerHTML=`<img src="${img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover">`;
+        document.getElementById('modal-video-container').style.display='none';
+        document.querySelectorAll('.modal-thumb').forEach(x=>x.classList.remove('active'));
+        t.classList.add('active');
+      };
+      thumbs.appendChild(t);
+    });
+  }
+  // Media tabs (images + video toggle)
+  const mediaTabs=document.getElementById('modal-media-tabs');mediaTabs.innerHTML='';
+  const vc=document.getElementById('modal-video-container');
+  const vi=document.getElementById('modal-video');
+  // Convert video URL
+  let vSrc='';
+  if(p.video){
+    if(p.video.includes('youtube.com/watch'))vSrc=p.video.replace('watch?v=','embed/').split('&')[0];
+    else if(p.video.includes('youtu.be/'))vSrc='https://www.youtube.com/embed/'+p.video.split('youtu.be/')[1].split('?')[0];
+    else if(p.video.includes('instagram.com/reel')||p.video.includes('instagram.com/p/'))vSrc=p.video.replace(/\/?(\?.*)?$/,'/embed/');
+    else vSrc=p.video;
+  }
+  if(vSrc&&imgs.length){
+    // Show tab to switch to video
+    const vTab=document.createElement('button');
+    vTab.className='size-btn';vTab.textContent='▶ Watch Video';vTab.style.fontSize='.72rem';
+    vTab.onclick=()=>{
+      mainImg.innerHTML='';
+      vi.src=vSrc;vc.style.display='block';
+      document.querySelectorAll('.modal-thumb').forEach(x=>x.classList.remove('active'));
+    };
+    mediaTabs.appendChild(vTab);
+  }else if(vSrc){
+    vi.src=vSrc;vc.style.display='block';
+  }else{
+    vc.style.display='none';vi.src='';
+  }
+  // Sizes
+  const ss=document.getElementById('modal-size-section');const sc=document.getElementById('modal-sizes');
+  if(p.sizes&&p.sizes.length){ss.style.display='block';sc.innerHTML=p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('');}
+  else ss.style.display='none';
+  document.getElementById('product-modal').classList.add('active');
+}
+
+// ── CMS ADMIN TAB ──
+function loadCMSAdmin(){
+  const cms=getCMS();
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||''};
+  set('cms-brand-name',cms.brandName);set('cms-tagline',cms.tagline);
+  set('cms-email',cms.email);set('cms-phone',cms.phone);set('cms-address',cms.address);
+  set('cms-privacy',cms.privacy);set('cms-faq',cms.faq);set('cms-contact',cms.contact);
+}
+function saveCMSAdmin(){
+  const g=id=>document.getElementById(id)?.value||'';
+  const cms={
+    brandName:g('cms-brand-name'),tagline:g('cms-tagline'),
+    email:g('cms-email'),phone:g('cms-phone'),address:g('cms-address'),
+    privacy:g('cms-privacy'),faq:g('cms-faq'),contact:g('cms-contact')
+  };
+  saveCMS(cms);loadFooterFromCMS();
+  showAlert('Footer & CMS content saved and live!','success');
+}
+
+// ── LOAD ALL ON ADMIN DASHBOARD ──
+const _origLoadAdmin=typeof loadAdminDashboard!=='undefined'?loadAdminDashboard:null;
+function loadAdminDashboard(){
+  if(!APP.currentAdmin)return;
+  renderCategoryOptions();applyDashFilters();renderAdminOrders();
+  renderAdminProducts();renderAdminCategories();renderAdminCustomers();
+  renderAdminPayments();renderAdminTickets();loadSettingsFields();loadCMSAdmin();
+}
+
+// Sync footer on page load
+window.addEventListener('load',()=>{setTimeout(loadFooterFromCMS,100)});
 
 </script>
 
-<footer class="site-footer">
-<div class="footer-grid">
-<div>
-<h3>Ilarika</h3>
-<p>Premium curated fashion for modern wardrobes.</p>
-</div>
-
-<div>
-<h4>Contact</h4>
-<p>Support: support@ilarika.in</p>
-<p>Phone: +91 9999999999</p>
-</div>
-
-<div>
-<h4>Registered Address</h4>
-<p>Chennai, Tamil Nadu, India</p>
-</div>
-
-<div>
-<h4>Quick Links</h4>
-<a href="#" onclick="openCMSPage('privacy')">Privacy Policy</a>
-<a href="#" onclick="openCMSPage('faq')">FAQ</a>
-<a href="#" onclick="openCMSPage('contact')">Contact</a>
-</div>
-</div>
-</footer>
-
-<div id="cms-modal" class="modal">
-<button class="modal-close" onclick="closeCMSModal()">✕</button>
-<div class="modal-content" style="grid-template-columns:1fr;max-width:900px">
-<div>
-<h2 id="cms-title"></h2>
-<div id="cms-content"></div>
-</div>
-</div>
-</div>
-
+<!-- ACCOUNT PAGE SECTION (must be before closing body) -->
 </body>
 </html>
+
+<footer class="site-footer" id="site-footer">
+<div class="footer-grid">
+  <div>
+    <h3 id="footer-brand">Ilarika</h3>
+    <p id="footer-tagline">Premium curated fashion for modern wardrobes.</p>
+  </div>
+  <div>
+    <h4>Contact</h4>
+    <p id="footer-email-display">support@ilarika.in</p>
+    <p id="footer-phone-display">+91 9999999999</p>
+  </div>
+  <div>
+    <h4>Registered Address</h4>
+    <p id="footer-address-display">Chennai, Tamil Nadu, India</p>
+  </div>
+  <div>
+    <h4>Quick Links</h4>
+    <a onclick="openCMSPage('privacy')">Privacy Policy</a>
+    <a onclick="openCMSPage('faq')">FAQ</a>
+    <a onclick="openCMSPage('contact')">Contact Us</a>
+  </div>
+</div>
+<div class="footer-bottom">© 2025 Ilarika. All rights reserved. | Made with ♥ in India</div>
+</footer>
+
+<!-- CMS MODAL (Privacy / FAQ / Contact) -->
+<div id="cms-modal" class="modal">
+  <button class="modal-close" onclick="closeCMSModal()" style="position:fixed;top:1.5rem;right:1.5rem;z-index:2001">✕</button>
+  <div class="cms-modal-body">
+    <h2 id="cms-title"></h2>
+    <div id="cms-content"></div>
+  </div>
+</div>
+
+<!-- ORDER DETAIL MODAL -->
+<div id="order-detail-modal" class="modal">
+  <button class="modal-close" onclick="document.getElementById('order-detail-modal').classList.remove('active')">✕</button>
+  <div class="modal-content" style="grid-template-columns:1fr;max-width:650px"><div id="order-detail-content"></div></div>
+</div>
